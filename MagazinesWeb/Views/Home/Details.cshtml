@@ -1,0 +1,91 @@
+﻿@model IEnumerable<MagazinesWeb.Models.Magazine>
+@{
+    ViewData["Title"] = "Szczegóły wydania";
+}
+
+<link href="~/css/datatables.min.css" rel="stylesheet" />
+
+<div class="row">
+    <div class="col-md-12">
+        <h2>
+            Wydania "@Model.FirstOrDefault().Title"
+        </h2>
+        <table class="table table-hover table-bordered table-striped" id="magzinesTable">
+            <thead>
+                <tr>
+                    <th>
+                        Tytuł czasopisma
+                    </th>
+                    <th>
+                        ISSN
+                    </th>
+                    <th>
+                        EISSN
+                    </th>
+                    <th>
+                        Rok
+                    </th>
+                    <th>
+                        Liczba punktów
+                    </th>
+                    <th>
+                        Lista
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @item.Title
+                        </td>
+                        <td>
+                            @item.ISSN
+                        </td>
+                        <td>
+                            @item.EISSN
+                        </td>
+                        <td>
+                            @item.Year
+                        </td>
+                        <td>
+                            @item.Points
+                        </td>
+                        <td>
+                            @item.List
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section Scripts {
+
+    <script src="~/js/datatables.min.js"></script>
+
+    <script type="text/javascript">
+        $('#magzinesTable').DataTable({
+            "paging": false,
+            "info": true,
+            "searching": false,
+            //"order": [[1, "asc"]],
+            "language": {
+                "lengthMenu": "Pokaż _MENU_ rekordów",
+                "search": "Szukaj:",
+                "paginate": {
+                    "next": "Następna strona",
+                    "previous": "Poprzednia strona"
+                },
+                "emptyTable": "Brak danych",
+                "loadingRecords": "Proszę czekać - ładowanie...",
+                "zeroRecords": "Brak rekordów do wyświetlenia",
+                "info": "Pokazuję stronę _PAGE_ z _PAGES_",
+                "infoFiltered": " - przefiltrowane z _MAX_ rekordów",
+                "infoEmpty": "Brak rekordów do wyświetlenia"
+            }
+        });
+    </script>
+}

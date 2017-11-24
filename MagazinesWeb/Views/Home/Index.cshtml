@@ -1,0 +1,82 @@
+﻿@model IEnumerable<MagazinesWeb.Models.Magazine>
+@{
+    ViewData["Title"] = "Lista magazynów";
+}
+
+<link href="~/css/datatables.min.css" rel="stylesheet" />
+
+<div class="row">
+    <div class="col-md-12">
+        <br />
+        <table class="table table-hover table-bordered table-striped" id="magzinesTable">
+            <thead>
+                <tr>
+                    <th>
+                        LP
+                    </th>
+                    <th>
+                        Tytuł czasopisma
+                    </th>
+                    <th>
+                        ISSN
+                    </th>
+                    <th>
+                        Punkty
+                    </th>
+                    <th>
+                        Lista
+                    </th>
+                    <th>
+                        Szczegóły
+                    </th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+    Magazynów w bazie: @ViewBag.MagazinesCount
+</div>
+
+
+@section Scripts {
+    <script src="~/js/datatables.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#magzinesTable').DataTable({
+                "ajax": "/Home/JsonTable",
+                "columns": [
+                    { "data": "lp" },
+                    { "data": "title" },
+                    { "data": "issn" },
+                    { "data": "points" },
+                    { "data": "list" },
+                    {
+                        "data": "issn",
+                        "render": function (data, type, row, meta) {
+                            return '<a href="/Home/Details/' + data + '"><i class="fa fa-eye"></i></a>';
+                        },
+                    }
+                ],
+                pageLength: 50,
+                lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "Wszystkie"]],
+                "language": {
+                    "lengthMenu": "Pokaż _MENU_ rekordów",
+                    "search": "Szukaj:",
+                    "paginate": {
+                        "next": "Następna strona",
+                        "previous": "Poprzednia strona"
+                    },
+                    "emptyTable": "Brak danych",
+                    "loadingRecords": "Proszę czekać - ładowanie...",
+                    "zeroRecords": "Brak rekordów do wyświetlenia",
+                    "info": "Pokazuję stronę _PAGE_ z _PAGES_",
+                    "infoFiltered": " - przefiltrowane z _MAX_ rekordów" ,
+                    "infoEmpty": "Brak rekordów do wyświetlenia"
+                }
+                //info: false,
+            });
+        });
+    </script>
+}
+
+
