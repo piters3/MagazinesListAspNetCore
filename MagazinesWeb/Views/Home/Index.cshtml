@@ -3,8 +3,6 @@
     ViewData["Title"] = "Lista magazynów";
 }
 
-<link href="~/css/datatables.min.css" rel="stylesheet" />
-
 <div class="row">
     <div class="col-md-12">
         <br />
@@ -39,7 +37,6 @@
 
 
 @section Scripts {
-    <script src="~/js/datatables.min.js"></script>
     <script type="text/javascript">
         $(document).ready(function () {
             $('#magzinesTable').DataTable({
@@ -70,7 +67,7 @@
                     "loadingRecords": "Proszę czekać - ładowanie...",
                     "zeroRecords": "Brak rekordów do wyświetlenia",
                     "info": "Pokazuję stronę _PAGE_ z _PAGES_",
-                    "infoFiltered": " - przefiltrowane z _MAX_ rekordów" ,
+                    "infoFiltered": " - przefiltrowane z _MAX_ rekordów",
                     "infoEmpty": "Brak rekordów do wyświetlenia"
                 }
                 //info: false,

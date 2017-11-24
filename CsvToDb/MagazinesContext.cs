@@ -8,7 +8,7 @@ namespace CsvToDb
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseMySQL("server=localhost;database=Magazines;user=root;password=root");
+            optionsBuilder.UseMySQL("server=localhost;database=magazines2;user=root;password=root");
         }
     }
 }
