@@ -1,0 +1,3 @@
+packages/* linguist-vendored
+GymLog.Client/Content/* linguist-vendored
+GymLog.Client/Scripts/* linguist-vendored
