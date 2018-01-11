@@ -1,6 +1,5 @@
-﻿@model IEnumerable<MagazinesWeb.Models.Magazine>
-@{
-    ViewData["Title"] = "Lista magazynów";
+﻿@{
+    ViewData["Title"] = "Strona główna";
 }
 
 <div class="row">
@@ -31,15 +30,16 @@
             </thead>
             <tbody></tbody>
         </table>
+        Magazynów w bazie: @ViewBag.MagazinesCount
     </div>
-    Magazynów w bazie: @ViewBag.MagazinesCount
 </div>
+
 
 
 @section Scripts {
     <script type="text/javascript">
         $(document).ready(function () {
-            $('#magzinesTable').DataTable({
+            var table = $('#magzinesTable').DataTable({
                 "ajax": "/Home/JsonTable",
                 "columns": [
                     { "data": "lp" },
@@ -72,6 +72,7 @@
                 }
                 //info: false,
             });
+            table.search("", true, false).draw(); //Dokładne dopasowanie do wyszukiwania
         });
     </script>
 }

@@ -10,12 +10,24 @@ namespace CsvToDb
     {
         static void Main(string[] args)
         {
-            var values = ProcessFile("magazines.csv");
-            List<string[]> brokenMagazines = values.Item2;
-            List<Magazine> magazines = values.Item1;
-            magazines.AddRange(RepairMagazines(brokenMagazines).OrderBy(m => m.Title));
-            List<Magazine> magazinesWithoutNulls = RemoveNullMagazines(magazines);
+            var valuesA = ProcessFile("A.csv");
+            List<string[]> brokenMagazinesA = valuesA.Item2;
+            List<Magazine> magazinesA = valuesA.Item1;
+
+            var valuesB = ProcessFile("B.csv");
+            List<string[]> brokenMagazinesB = valuesB.Item2;
+            List<Magazine> magazinesB = valuesB.Item1;
+
+            var valuesC = ProcessFile("C.csv");
+            List<string[]> brokenMagazinesC = valuesC.Item2;
+            List<Magazine> magazinesC = valuesC.Item1;
+
+            magazinesA.AddRange(RepairMagazines(brokenMagazinesA).OrderBy(m => m.Title));
+            magazinesA.AddRange(RepairMagazines(brokenMagazinesB).OrderBy(m => m.Title));
+            magazinesA.AddRange(RepairMagazines(brokenMagazinesC).OrderBy(m => m.Title));
+            List<Magazine> magazinesWithoutNulls = RemoveNullMagazines(magazinesA);
             List<Magazine> reordered = ReorderLP(magazinesWithoutNulls);
+
             InsertToDatabase(reordered);
         }
 
@@ -126,16 +138,22 @@ namespace CsvToDb
             {
                 if (item.Length == 7)
                 {
-                    repairedMagazines.Add(new Magazine()
+                    try
                     {
-                        LP = item[0].Replace(" ", string.Empty) != string.Empty ? int.Parse(item[0]) : (int?)null,
-                        Title = item[1],
-                        ISSN = item[2],
-                        EISSN = item[3],
-                        Year = item[4],
-                        Points = int.Parse(item[5]),
-                        List = item[6]
-                    });
+                        repairedMagazines.Add(new Magazine()
+                        {
+                            LP = item[0].Replace(" ", string.Empty) != string.Empty ? int.Parse(item[0]) : (int?)null,
+                            Title = item[1],
+                            ISSN = item[2],
+                            EISSN = item[3],
+                            Year = item[4],
+                            Points = int.Parse(item[5]),
+                            List = item[6]
+                        });
+                    }
+                    catch
+                    {
+                    }
                 }
             }
 
@@ -154,16 +172,24 @@ namespace CsvToDb
                                 var columns = l.Split(',');
                                 if (columns.Length == 7)
                                 {
-                                    return new Magazine
+                                    try
                                     {
-                                        LP = columns[0] != string.Empty ? int.Parse(columns[0]) : (int?)null,
-                                        Title = columns[1],
-                                        ISSN = columns[2],
-                                        EISSN = columns[3],
-                                        Year = columns[4],
-                                        Points = int.Parse(columns[5]),
-                                        List = columns[6]
-                                    };
+                                        return new Magazine
+                                        {
+                                            LP = columns[0] != string.Empty ? int.Parse(columns[0]) : (int?)null,
+                                            Title = columns[1],
+                                            ISSN = columns[2],
+                                            EISSN = columns[3],
+                                            Year = columns[4],
+                                            Points = int.Parse(columns[5]),
+                                            List = columns[6]
+                                        };
+                                    }
+                                    catch
+                                    {
+                                        return null;
+                                    }
+
                                 }
                                 else
                                 {
