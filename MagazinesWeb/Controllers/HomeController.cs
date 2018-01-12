@@ -26,7 +26,8 @@ namespace MagazinesWeb.Controllers
 
         public JsonResult JsonTable()
         {
-            var data = _context.Magazines.Where(m => m.LP != null &&  m.Title == m.Title.Trim());
+            //var data = _context.Magazines.Where(m => m.LP != null && m.Title == m.Title.Trim() && m.List == m.List.Replace(";", string.Empty));
+            var data = _context.Magazines.Where(m => m.LP != null);
 
             return Json(new { data });
         }

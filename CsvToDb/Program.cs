@@ -10,6 +10,10 @@ namespace CsvToDb
     {
         static void Main(string[] args)
         {
+            var stopwatch = System.Diagnostics.Stopwatch.StartNew();
+
+            Console.WriteLine("Rozpoczęto dodawanie danych do bazy");
+
             var valuesA = ProcessFile("A.csv");
             List<string[]> brokenMagazinesA = valuesA.Item2;
             List<Magazine> magazinesA = valuesA.Item1;
@@ -22,13 +26,22 @@ namespace CsvToDb
             List<string[]> brokenMagazinesC = valuesC.Item2;
             List<Magazine> magazinesC = valuesC.Item1;
 
-            magazinesA.AddRange(RepairMagazines(brokenMagazinesA).OrderBy(m => m.Title));
-            magazinesA.AddRange(RepairMagazines(brokenMagazinesB).OrderBy(m => m.Title));
-            magazinesA.AddRange(RepairMagazines(brokenMagazinesC).OrderBy(m => m.Title));
-            List<Magazine> magazinesWithoutNulls = RemoveNullMagazines(magazinesA);
+            List<Magazine> all = new List<Magazine>();
+
+            all.AddRange(magazinesA);
+            all.AddRange(RepairMagazines(brokenMagazinesA));
+            all.AddRange(magazinesB);
+            all.AddRange(RepairMagazines(brokenMagazinesB));
+            all.AddRange(magazinesC);         
+            all.AddRange(RepairMagazines(brokenMagazinesC));
+
+            List<Magazine> magazinesWithoutNulls = RemoveNullMagazines(all);
             List<Magazine> reordered = ReorderLP(magazinesWithoutNulls);
 
             InsertToDatabase(reordered);
+
+            stopwatch.Stop();
+            Console.WriteLine("Czas trwania programu: {0:hh\\:mm\\:ss}", stopwatch.Elapsed);
         }
 
         private static List<Magazine> ReorderLP(List<Magazine> magazinesWithoutNulls)
@@ -53,10 +66,12 @@ namespace CsvToDb
             {
                 if (magazine != null)
                 {
+                    magazine.List = magazine.List.Replace(";", string.Empty);   //dodane
+                    magazine.Title = magazine.Title.Trim();                     //dodane
                     magazinesWithoutNulls.Add(magazine);
                 }
             }
-            return magazinesWithoutNulls;
+            return magazinesWithoutNulls.OrderBy(m=>m.Title).ToList();  //niepewne
         }
 
 
