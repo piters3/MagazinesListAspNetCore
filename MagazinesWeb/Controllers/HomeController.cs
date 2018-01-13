@@ -26,14 +26,12 @@ namespace MagazinesWeb.Controllers
 
         public JsonResult JsonTable()
         {
-            //var data = _context.Magazines.Where(m => m.LP != null && m.Title == m.Title.Trim() && m.List == m.List.Replace(";", string.Empty));
             var data = _context.Magazines.Where(m => m.LP != null);
-
             return Json(new { data });
         }
 
 
-        public IActionResult Details(string id)
+        public IActionResult ISSN(string id)
         {
             if (id == null)
             {
@@ -43,18 +41,41 @@ namespace MagazinesWeb.Controllers
             List<Magazine> magazines = _context.Magazines.Where(m => m.ISSN == id).ToList();
             if (magazines.Count == 0)
             {
-                //return Content("Item not found");
                 return NotFound();
             }
             else
             {
                 magazines.RemoveAt(0);
             }
-            if (magazines == null)
+            if (magazines.Count == 0)
             {
                 return NotFound();
             }
-            return View(magazines);
+            return View("Details", magazines);
+        }
+
+
+        public IActionResult EISSN(string id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            List<Magazine> magazines = _context.Magazines.Where(m => m.EISSN == id).ToList();
+            if (magazines.Count == 0)
+            {
+                return NotFound();
+            }
+            else
+            {
+                magazines.RemoveAt(0);
+            }
+            if (magazines.Count == 0)
+            {
+                return NotFound();
+            }
+            return View("Details", magazines);
         }
 
 

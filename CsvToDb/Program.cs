@@ -12,7 +12,7 @@ namespace CsvToDb
         {
             var stopwatch = System.Diagnostics.Stopwatch.StartNew();
 
-            Console.WriteLine("Rozpoczęto dodawanie danych do bazy");
+            Console.WriteLine("Czytanie plików CSV...");
 
             var valuesA = ProcessFile("A.csv");
             List<string[]> brokenMagazinesA = valuesA.Item2;
@@ -32,11 +32,13 @@ namespace CsvToDb
             all.AddRange(RepairMagazines(brokenMagazinesA));
             all.AddRange(magazinesB);
             all.AddRange(RepairMagazines(brokenMagazinesB));
-            all.AddRange(magazinesC);         
+            all.AddRange(magazinesC);
             all.AddRange(RepairMagazines(brokenMagazinesC));
 
             List<Magazine> magazinesWithoutNulls = RemoveNullMagazines(all);
             List<Magazine> reordered = ReorderLP(magazinesWithoutNulls);
+
+            Console.WriteLine($"Dodawanie {reordered.Count} elementów...");
 
             InsertToDatabase(reordered);
 
@@ -66,12 +68,12 @@ namespace CsvToDb
             {
                 if (magazine != null)
                 {
-                    magazine.List = magazine.List.Replace(";", string.Empty);   //dodane
-                    magazine.Title = magazine.Title.Trim();                     //dodane
+                    magazine.List = magazine.List.Replace(";", string.Empty);
+                    magazine.Title = magazine.Title.Trim();
                     magazinesWithoutNulls.Add(magazine);
                 }
             }
-            return magazinesWithoutNulls.OrderBy(m=>m.Title).ToList();  //niepewne
+            return magazinesWithoutNulls.OrderBy(m=>m.Title).ToList();
         }
 
 
@@ -80,14 +82,19 @@ namespace CsvToDb
             using (var db = new MagazinesContext())
             {
                 db.Database.EnsureCreated();
-                if (!db.Magazines.Any())
-                {
-                    foreach (var magazine in magazines)
-                    {
-                        db.Magazines.Add(magazine);
-                    }
-                    db.SaveChanges();
-                }
+                db.ChangeTracker.AutoDetectChangesEnabled = false;
+                db.Magazines.AddRange(magazines);
+                db.BulkSaveChanges(bulk => bulk.BatchSize = 100);
+                db.BulkSaveChanges();
+
+                //if (!db.Magazines.Any())
+                //{
+                //    foreach (var magazine in magazines)
+                //    {
+                //        db.Magazines.Add(magazine);
+                //    }
+                //    db.SaveChanges();
+                //}
             }
 
             Console.WriteLine("Dane z pliku CSV zostały dodane do bazy danych!");

@@ -18,13 +18,13 @@
                         ISSN
                     </th>
                     <th>
+                        EISSN
+                    </th>
+                    <th>
                         Punkty
                     </th>
                     <th>
                         Lista
-                    </th>
-                    <th>
-                        Szczegóły
                     </th>
                 </tr>
             </thead>
@@ -42,18 +42,28 @@
             var table = $('#magzinesTable').DataTable({
                 "ajax": "/Home/JsonTable",
                 "columns": [
-                    { "data": "lp" },
+                    { "data": "lp", "className": "text-center" },
                     { "data": "title" },
-                    { "data": "issn" },
-                    { "data": "points" },
-                    { "data": "list" },
                     {
                         "data": "issn",
+                        "width": "10%",
+                        "className": "text-center",
                         "render": function (data, type, row, meta) {
-                            return '<a href="/Home/Details/' + data + '"><i class="fa fa-eye"></i></a>';
+                            return '<a href="/Home/ISSN/' + data + '">' + data + '</a>';
                         },
-                    }
+                    },
+                    {
+                        "data": "eissn",
+                        "width": "10%",
+                        "className": "text-center",
+                        "render": function (data, type, row, meta) {
+                            return '<a href="/Home/EISSN/' + data + '">' + data + '</a>';
+                        },
+                    },
+                    { "data": "points", "className": "text-center" },
+                    { "data": "list", "className": "text-center" },
                 ],
+                processing: true,
                 pageLength: 50,
                 lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "Wszystkie"]],
                 "language": {
@@ -65,6 +75,7 @@
                     },
                     "emptyTable": "Brak danych",
                     "loadingRecords": "Proszę czekać - ładowanie...",
+                    "processing": "Proszę czekać - ładowanie...",
                     "zeroRecords": "Brak rekordów do wyświetlenia",
                     "info": "Pokazuję stronę _PAGE_ z _PAGES_",
                     "infoFiltered": " - przefiltrowane z _MAX_ rekordów",
